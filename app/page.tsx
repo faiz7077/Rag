@@ -4,12 +4,13 @@ import Image from "next/image";
 import skillsynclogo from "../app/assets/skillsynclogo.png";
 import background from "../app/assets/background.png";
 
-import { useChat } from "@ai-sdk/react";
+import { useChat, Message } from "@ai-sdk/react";
 import PromptSuggestionRow from "./components/PromptSuggestionRow";
 import { LoadingBubble } from "./components/LoadingBubble";
 import Bubble from "./components/Bubble";
-import { Message } from "@ai-sdk/react";
+
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const { input, handleInputChange, handleSubmit, messages, isLoading, append } =
@@ -18,98 +19,102 @@ export default function Home() {
     });
 
   const noMessages = messages.length === 0;
-  
-  // Ref for the messages container
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatSectionRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when messages change
+  // auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  // -------------------------------
-  // FIXED appendMessage()
-  // -------------------------------
   const appendMessage = async (
-    msg: { role: "user" | "assistant" | "system" | "data"; content: string }
+    msg: { role: Message["role"]; content: string }
   ) => {
     await append(msg);
   };
 
-  // -------------------------------
-  // When clicking a suggestion bubble
-  // -------------------------------
   const handlePrompt = (promptText: string) => {
-    const userMessage: Message = {
-      id: crypto.randomUUID(),
-      role: "user",
-      content: promptText,
-    };
-
     appendMessage({
       role: "user",
       content: promptText,
     });
-
-    return userMessage;
   };
 
   return (
-    <div className="relative min-h-screen w-full flex justify-center items-center overflow-hidden bg-black">
+    <div className="relative min-h-screen w-full flex justify-center items-center overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black">
 
-      {/* Background Image */}
+      {/* Background */}
       <Image
         src={background}
         alt="Background"
         fill
         priority
-        className="object-cover opacity-40 z-0"
+        className="object-cover opacity-20 blur-sm z-0"
       />
 
-      {/* Chat Container */}
-      <main className="relative z-10 w-[80vh] h-[80vh] bg-gradient-to-b from-neutral-100 to-neutral-300 
-        rounded-[15px] flex flex-col justify-between items-center p-5 shadow-xl border border-gray-300">
+      {/* Main Chat Card */}
+      <motion.main
+        initial={{ opacity: 0, scale: 0.9, y: 40 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative z-10 w-[90vw] md:w-[70vh] h-[85vh]
+          bg-white/10 backdrop-blur-xl border border-white/20
+          rounded-3xl flex flex-col p-6 shadow-2xl"
+      >
 
         {/* Logo */}
-        <Image
-          src={skillsynclogo}
-          alt="SkillSync Logo"
-          width={150}
-          className="mt-4"
-        />
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center mb-2"
+        >
+          <Image
+            src={skillsynclogo}
+            alt="SkillSync Logo"
+            width={100}
+            className="drop-shadow-xl"
+          />
+        </motion.div>
 
-        {/* Prompt Suggestions - Always Visible */}
-        {noMessages ? (
-          <p className="mt-6 text-center text-lg starter-text">
+        {/* Intro Text */}
+        {noMessages && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center text-black-200 text-md mt-2"
+          >
             The Ultimate place for Formula One super fans.
             <br />
-            Don't ask me about anything else!
-          </p>
-        ) : null}
-        
-        <div className="w-full px-5 mt-4">
-          <PromptSuggestionRow onPromptClick={handlePrompt} />
-        </div>
+            Ask anything about F1!
+          </motion.p>
+        )}
 
-        {/* Chat Section with Scroll */}
-        <section
-          ref={chatSectionRef}
-          className="w-full flex-1 overflow-y-auto px-5 mt-5 flex flex-col"
+        {/* Suggestions */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full mt-4"
         >
-          {noMessages ? (
-            <div className="flex-1 flex items-center justify-center text-gray-500">
-              {/* Empty state - suggestions are shown above */}
-            </div>
-          ) : (
+          <PromptSuggestionRow onPromptClick={handlePrompt} />
+        </motion.div>
+
+        {/* Chat Messages */}
+        <section
+          className="flex-1 overflow-y-auto mt-4 px-2 space-y-3 hide-scrollbar"
+        >
+          {!noMessages && (
             <>
               {messages.map((message, index) => (
-                <Bubble key={`msg-${index}`} message={message} />
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <Bubble message={message} />
+                </motion.div>
               ))}
 
               {isLoading && <LoadingBubble />}
-              
-              {/* Invisible div at the bottom for auto-scroll */}
+
               <div ref={messagesEndRef} />
             </>
           )}
@@ -118,24 +123,28 @@ export default function Home() {
         {/* Input Box */}
         <form
           onSubmit={handleSubmit}
-          className="w-full flex items-center border-t border-gray-400 pt-4"
+          className="w-full flex items-center gap-3 mt-4"
         >
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Ask me anything about Formula 1..."
-            className="flex-1 h-10 ml-4 rounded-md px-3 text-black focus:outline-none"
+            placeholder="Ask your F1 question..."
+            className="flex-1 h-12 px-4 rounded-xl bg-white/20 
+              text-black placeholder-gray-600
+              backdrop-blur-lg shadow-inner outline-none 
+             "
           />
-
-          <input
+          <button
             type="submit"
-            value="Send"
             disabled={isLoading}
-            className="ml-3 mr-4 w-20 h-10 rounded-md bg-[#398b9b] text-white cursor-pointer disabled:opacity-50"
-          />
+            className="h-12 px-5 rounded-xl bg-blue-700 hover:bg-blue-500 
+              text-white shadow-lg transition disabled:opacity-40"
+          >
+            Send
+          </button>
         </form>
-      </main>
+      </motion.main>
     </div>
   );
 }
