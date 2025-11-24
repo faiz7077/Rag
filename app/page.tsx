@@ -31,9 +31,12 @@ export default function Home() {
   // -------------------------------
   // FIXED appendMessage()
   // -------------------------------
-  const appendMessage = async (msg: { role: string; content: string }) => {
-    await append(msg);
-  };
+  const appendMessage = async (
+  msg: { role: "user" | "assistant" | "system" | "data"; content: string }
+) => {
+  await append(msg);
+};
+
 
   // -------------------------------
   // When clicking a suggestion bubble

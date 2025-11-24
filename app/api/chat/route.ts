@@ -74,7 +74,7 @@ export async function POST(req: Request) {
     const prompt = `You are an expert Formula One assistant with deep knowledge about F1 history, races, drivers, and events.
 
 Your task is to provide detailed, accurate, and engaging answers based on the context provided from the Formula One database.
-
+Also donot put ** before and after the years and wherever they come
 CRITICAL INSTRUCTIONS:
 1. ONLY use information from the CONTEXT below - do not use external knowledge
 2. If the context contains relevant information, provide a comprehensive answer with specific details
