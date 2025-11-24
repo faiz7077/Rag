@@ -1,26 +1,163 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Global Font */
+* {
+  font-family: Verdana, Tahoma, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Page Background */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("/assets/background.png");
+  background-size: cover;
 }
 
-@media (prefers-color-scheme: dark) {
+/* MAIN CONTAINER */
+main {
+  width: 80vh;
+  height: 80vh;
+  background: linear-gradient(to bottom, #f8f8f8, #cfcfcf);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #383838;
+}
+
+section {
+  width: 100%;
+}
+
+section.populated {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: scroll;
+}
+
+.starter-text {
+  padding: 0 80px;
+}
+
+/* INPUT FORM */
+form {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  border-top: #828282 solid 2px;
+  padding-top: 20px;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+}
+
+input.question-box {
+  width: 90%;
+  height: 40px;
+  margin-left: 20px;
+  border: none;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+input[type="submit"] {
+  width: 10%;
+  height: 40px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #398b9b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Fix typo */
+input:focus {
+  outline: none;
+}
+
+/* Tailwind Theme (ShadCN) */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.bubble {
+  background-color: #e0e0e0;
+  border-radius: 15px;
+  padding: 10px 15px;
+  margin: 8px;
+  padding: 8px;
+  max-width: 70%;
+  font-size: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #828282;
+  width: 80%;
+  text-align: left;
+}
+
+.bubble.user {
+  background-color: #398b9b;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+  border-radius: 15px 15px 0 15px;
+} 
+
+.buuble.assistant {
+  background-color: #e0e0e0;
+  color: #383838;
+  align-self: flex-start;
+  margin-right: auto;
+    border-radius: 15px 15px 0 15px;
+}
+
+.prompt-suggestion-button{
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
 }
