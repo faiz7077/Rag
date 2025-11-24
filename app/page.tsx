@@ -32,11 +32,10 @@ export default function Home() {
   // FIXED appendMessage()
   // -------------------------------
   const appendMessage = async (
-  msg: { role: "user" | "assistant" | "system" | "data"; content: string }
-) => {
-  await append(msg);
-};
-
+    msg: { role: "user" | "assistant" | "system" | "data"; content: string }
+  ) => {
+    await append(msg);
+  };
 
   // -------------------------------
   // When clicking a suggestion bubble
@@ -80,23 +79,28 @@ export default function Home() {
           className="mt-4"
         />
 
+        {/* Prompt Suggestions - Always Visible */}
+        {noMessages ? (
+          <p className="mt-6 text-center text-lg starter-text">
+            The Ultimate place for Formula One super fans.
+            <br />
+            Don't ask me about anything else!
+          </p>
+        ) : null}
+        
+        <div className="w-full px-5 mt-4">
+          <PromptSuggestionRow onPromptClick={handlePrompt} />
+        </div>
+
         {/* Chat Section with Scroll */}
         <section
           ref={chatSectionRef}
-          className={`w-full flex-1 overflow-y-auto px-5 mt-5 ${
-            noMessages ? "" : "flex flex-col"
-          }`}
+          className="w-full flex-1 overflow-y-auto px-5 mt-5 flex flex-col"
         >
           {noMessages ? (
-            <>
-              <p className="mt-10 text-center text-lg starter-text">
-                The Ultimate place for Formula One super fans.
-                <br />
-                Don't ask me about anything else!
-              </p>
-
-              <PromptSuggestionRow onPromptClick={handlePrompt} />
-            </>
+            <div className="flex-1 flex items-center justify-center text-gray-500">
+              {/* Empty state - suggestions are shown above */}
+            </div>
           ) : (
             <>
               {messages.map((message, index) => (
